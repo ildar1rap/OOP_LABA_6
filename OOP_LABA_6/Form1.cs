@@ -19,9 +19,9 @@ namespace OOP_LABA_6
         {
 			InitializeComponent();
         }
-		public class FigureIF
+		public class FigureIF //класс фигур
 		{
-			private int x, y;
+			private int x, y; // точки
 			private Color FigureIFColor = Color.Red;//цвет;
 			private FigureIF _next;//указатель на некст объект
 			public FigureIF(int x, int y)//конструктор с параметрами
@@ -61,7 +61,8 @@ namespace OOP_LABA_6
 			{//возвращает _next
 				return _next;
 			}
-			public virtual void FactoryPaint(Panel paint_box, FigureIF figure, Pen pen) { }
+			public virtual void FactoryPaint(Panel paint_box, FigureIF figure, Pen pen) 
+			{ } //фабричный метож
 			public virtual void moveX(int k)
 			{
 				x += k;
@@ -72,14 +73,14 @@ namespace OOP_LABA_6
 			}
 			public virtual void changeSize(int k) { }
 		}
-		public void printFigure(FigureIF obj, Color color)
+		public void printFigure(FigureIF obj, Color color)//метод для отрисовки 
 		{
 			obj.setColor(color);
 			obj.FactoryPaint(paint_box, obj, pen);
 		}
 		class Line : FigureIF
 		{
-			private int LineLength = 50;
+			private int LineLength = 50; // длина линии
 			public Line(int x, int y) : base(x, y)//конструктор с параметрами
 			{
 
@@ -90,7 +91,7 @@ namespace OOP_LABA_6
 			}
 			public override void FactoryPaint(Panel paint_box, FigureIF figure, Pen pen)
 			{
-				pen.Color = figure.getColor();
+				pen.Color = figure.getColor();//перекрываю метод, фабричного метода
 				paint_box.CreateGraphics().DrawLine(pen, figure.getX() - getLineLength(),
 					figure.getY(), figure.getX() + getLineLength(), figure.getY());
 			}
@@ -120,7 +121,7 @@ namespace OOP_LABA_6
 
 		class Сircle : FigureIF
         {
-			private int СircleRad = 30;
+			private int СircleRad = 30; //радиус круга
             public Сircle(int x, int y) : base(x,y)//конструктор с параметрами
             {
 
@@ -131,7 +132,7 @@ namespace OOP_LABA_6
 			}
 			public override void FactoryPaint(Panel paint_box, FigureIF figure, Pen pen)
 			{
-				pen.Color = figure.getColor();
+				pen.Color = figure.getColor();//перекрываю метод фабричный
 				paint_box.CreateGraphics().DrawEllipse(pen, figure.getX() - getRad(),
 						figure.getY() - getRad(), getRad() * 2, getRad() * 2);
 			}
@@ -255,7 +256,7 @@ namespace OOP_LABA_6
 			for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 			{
 				if (!ModifierKeys.HasFlag(Keys.Control) && Storage.getobj().getColor() == Color.Orange)
-				{
+				{//если не нажат ctrl и цвет объекта оранжевый
 					printFigure(Storage.getobj(), Color.Red);
 				}
 			}
@@ -263,16 +264,16 @@ namespace OOP_LABA_6
 			bool check = false;
 			for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 			{
-				if(Storage.getobj() is Line 
-					&& e.X >= Storage.getobj().getX() - (Storage.getobj() as Line).getLineLength()
-					&& e.X <= Storage.getobj().getX() + (Storage.getobj() as Line).getLineLength()
+				if(Storage.getobj() is Line //если это линия и условие нажатие на линию
+					&& e.X >= Storage.getobj().getX() - ((Line)Storage.getobj()).getLineLength()
+					&& e.X <= Storage.getobj().getX() + ((Line)Storage.getobj()).getLineLength()
 					&& e.Y >= Storage.getobj().getY() - 2
 					&& e.Y <= Storage.getobj().getY() + 2)
 				{
 					printFigure(Storage.getobj(), Color.Orange);
 					check = true;
 				}
-				if (Storage.getobj() is Сircle &&
+				if (Storage.getobj() is Сircle && //если это круг и условие нажатие на круг
 					(Storage.getobj().getX() - e.X )* (Storage.getobj().getX() - e.X )+
 					(Storage.getobj().getY() - e.Y) * (Storage.getobj().getY() - e.Y) 
 					<= ((Сircle)Storage.getobj()).getRad() * ((Сircle)Storage.getobj()).getRad())
@@ -286,22 +287,22 @@ namespace OOP_LABA_6
 
 		private void paint_box_MouseClick(object sender, MouseEventArgs e)
 		{
-			FigureIF krug;
-			if (clickCheck(e)) 
+			
+			if (clickCheck(e)) //проверка 
 			{
 				return;
 			}
-
+			FigureIF krug; // создание объекта
 			if (radioButton1.Checked == true)
 			{
-				krug = new Сircle(e.X, e.Y);//если нажимаю на пустое место - создаю
+				krug = new Сircle(e.X, e.Y);//если нажимаю на пустое место - создаю круг
 			}
 			else
 			{
-				krug = new Line(e.X, e.Y);
+				krug = new Line(e.X, e.Y);//если нажимаю на пустое место - создаю линию
 			}
 
-			printFigure(krug, Color.Orange);
+			printFigure(krug, Color.Orange); //метод printFigure
 			label_paintbox.Visible = false;
 
 			Storage.add(krug);//добавляю в хранилище
@@ -311,33 +312,33 @@ namespace OOP_LABA_6
 		{
 			int k = 5;
 			if (e.KeyCode.Equals(Keys.A) || e.KeyCode.Equals(Keys.D))
-			{
+			{ //если нажал влево или вправо 
 				for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 				{
 					if (Storage.getobj().getColor() == Color.Orange && e.KeyCode.Equals(Keys.A))
-						Storage.getobj().moveX(-k);
+						Storage.getobj().moveX(-k); //если влево
 					else if(Storage.getobj().getColor() == Color.Orange)
-						Storage.getobj().moveX(k);
+						Storage.getobj().moveX(k); //если вправо
 				}
 				paint_box.Refresh();
 				for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 					Storage.getobj().FactoryPaint(paint_box, Storage.getobj(), pen);
 			}
-			else if (e.KeyCode.Equals(Keys.W) || e.KeyCode.Equals(Keys.S)) 
-			{ 
+			else if (e.KeyCode.Equals(Keys.W) || e.KeyCode.Equals(Keys.S))
+			{ //если нажал вверх или вниз
 				for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 				{
 					if (Storage.getobj().getColor() == Color.Orange && e.KeyCode.Equals(Keys.W))
-						Storage.getobj().moveY(-k);
+						Storage.getobj().moveY(-k); //если вверх
 					else if(Storage.getobj().getColor() == Color.Orange)
-						Storage.getobj().moveY(k);
+						Storage.getobj().moveY(k); //если вниз
 				}
 				paint_box.Refresh();
 				for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 					Storage.getobj().FactoryPaint(paint_box, Storage.getobj(), pen);
 			}
 			else if(e.KeyCode.Equals(Keys.Add) || e.KeyCode.Equals(Keys.Subtract))
-			{
+			{ //если нажал + или -
 				for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 				{
 					if (Storage.getobj().getColor() == Color.Orange && e.KeyCode.Equals(Keys.Add))
@@ -350,7 +351,7 @@ namespace OOP_LABA_6
 					Storage.getobj().FactoryPaint(paint_box, Storage.getobj(), pen);
 			}
 			else if (e.KeyCode.Equals(Keys.Delete))
-			{
+			{ //если нажал delete
 				for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
 				{
 					if (Storage.getobj().getColor() == Color.Orange)
@@ -370,7 +371,7 @@ namespace OOP_LABA_6
 		private void button1_Click(object sender, EventArgs e)
 		{
 			if (colorDialog1.ShowDialog() != System.Windows.Forms.DialogResult.Cancel)
-				textBox4.BackColor = colorDialog1.Color;
+				textBox4.BackColor = colorDialog1.Color; //изменение цвета
 		}
 
 		private void textBox4_Click(object sender, EventArgs e)
@@ -380,7 +381,7 @@ namespace OOP_LABA_6
 				if (Storage.getobj().getColor() == Color.Orange)
 				{
 					Storage.getobj().setColor(((TextBox)sender).BackColor);
-				}
+				} //изменение цвета
 			}
 			paint_box.Refresh();
 			for (Storage.First(); Storage.EOL(); Storage.Next())//нашли next = obj 
